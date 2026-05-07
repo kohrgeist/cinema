@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Rede de Cinemas</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f4f9; padding: 20px; }
+        .grid { display: flex; gap: 20px; flex-wrap: wrap; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 250px; text-align: center; }
+        .btn { padding: 10px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 10px; }
+        .btn:disabled { background-color: #ccc; cursor: not-allowed; }
+        .esgotado { color: #dc3545; font-weight: bold; }
+        .disponivel { color: #28a745; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>🎬 Sessões em Cartaz</h2>
+    <div class="grid">
+        {% for s in sessoes %}
+        <div class="card">
+            <h3>{{ s.filme }}</h3>
+            <p>🗓️ {{ s.data_hora }}</p>
+            <p>🎟️ 
+                {% if s.vagas > 0 %}
+                    <span class="disponivel">{{ s.vagas }} vagas</span>
+                {% else %}
+                    <span class="esgotado">ESGOTADO</span>
+                {% endif %}
+            </p>
+            
+            <form action="{{ url_for('comprar', sessao_id=s.id) }}" method="POST">
+                <button type="submit" class="btn" {% if s.vagas == 0 %}disabled{% endif %}>
+                    Comprar Ingresso
+                </button>
+            </form>
+            
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
